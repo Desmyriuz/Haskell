@@ -55,12 +55,12 @@ selgrau expo ((coef, expn):eqt) = if (expo == expn)
 derivada :: Polinomio -> Polinomio
 derivada [] = []
 derivada ((coef, expo):eqt)
-   | expo > 0 = (coef * fromIntegral(expo) , expo - 1) : derivada eqt
+   | expo > 0 = (coef * (fromIntegral(expo)) , expo - 1) : derivada eqt
    | otherwise = (0,0) : derivada eqt
 
 calcula :: Float -> Polinomio -> Float
 calcula _ [] = 0
-calcula num ((coef, expo):eqt) = coef * num ^ fromIntegral(expo) + calcula num eqt
+calcula num ((coef, expo):eqt) = coef * (num ^expo) + calcula num eqt
 
 noZeroInCoef :: Polinomio -> Polinomio
 noZeroInCoef [] = []
@@ -74,3 +74,31 @@ mult (moncoef, monexpo) ((coef, expo):eqt) = [(moncoef * coef, monexpo + expo)] 
 
 normaliza :: Polinomio -> Polinomio
 normaliza [] = []
+normaliza [(coef, expo)] = [(coef, expo)]
+normaliza ((coef, expo):(coef2, expo2):eqt)
+   | expo == expo2 = normaliza ((coef + coef2, expo):eqt)
+   | conta expo eqt == 0 = (coef, expo) : normaliza ((coef2, expo2):eqt)
+   | otherwise = normaliza ((coef, expo):eqt ++ [(coef2, expo2)])
+
+soma :: Polinomio -> Polinomio -> Polinomio
+soma [] poli = poli
+soma poli [] = poli
+soma poli1 poli2 = normaliza (poli1 ++ poli2)
+
+produto :: Polinomio -> Polinomio -> Polinomio
+produto [] _ = []
+produto _ [] = []
+produto ((coef,expo):eqt) polinomio = mult (coef,expo) polinomio ++ produto eqt polinomio
+
+ordena :: Polinomio -> Polinomio
+ordena [] = []
+ordena [(coef, expo)] = [(coef, expo)]
+ordena ((coef, expo):(coef2,expo2):eqt)
+   | expo >= expo2 = (coef2,expo2) : ordena ((coef,expo):eqt)
+   | otherwise = (coef, expo) : ordena ((coef2, expo2):eqt)
+
+equiv :: Polinomio -> Polinomio -> Bool
+equiv poli1 poli2
+   | poli1 == normaliza poli2 = True
+   | normaliza poli1 == poli2 = True
+   | otherwise = False
