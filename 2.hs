@@ -54,8 +54,9 @@ selgrau expo ((coef, expn):eqt) = if (expo == expn)
 
 derivada :: Polinomio -> Polinomio
 derivada [] = []
-derivada [(_, 0)] = [(0,0)]
-derivada ((coef, expo):eqt) = (coef * fromIntegral(expo) , expo - 1) : derivada eqt
+derivada ((coef, expo):eqt)
+   | expo > 0 = (coef * fromIntegral(expo) , expo - 1) : derivada eqt
+   | otherwise = (0,0) : derivada eqt
 
 calcula :: Float -> Polinomio -> Float
 calcula _ [] = 0
