@@ -54,7 +54,7 @@ selgrau expo ((coef, expn):eqt) = if (expo == expn)
 
 derivada :: Polinomio -> Polinomio
 derivada [] = []
-derivada [(_, 0)] = error "não pode ter expoente negativo"
+derivada [(_, 0)] = [(0,0)]
 derivada ((coef, expo):eqt) = (coef * fromIntegral(expo) , expo - 1) : derivada eqt
 
 calcula :: Float -> Polinomio -> Float
