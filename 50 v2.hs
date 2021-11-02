@@ -46,5 +46,18 @@ replicarElemento 0 ele = []
 replicarElemento rep ele = ele : replicarElemento (rep - 1) ele
 
 -- 10.
-intercalado :: Int -> [a] -> [a]
+intercalado :: a -> [a] -> [a]
 intercalado _ [] = []
+intercalado _ (x:[]) = [x]
+intercalado c (x:y) = x : c : intercalado c y
+
+-- 11.
+agrupar :: Eq a => [a] -> [[a]]
+agrupar [] = []
+agrupar (x:y) = agruparAux x [x] y
+                where
+                agruparAux num acc [] = [acc]
+                agruparAux num acc (xz:yz)
+                  | num == xz = agruparAux num (acc ++ [xz]) yz
+                  | otherwise = acc : agruparAux xz ([xz]) yz
+                  
